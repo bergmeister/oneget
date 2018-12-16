@@ -204,7 +204,6 @@ git submodule update --init
 
 #building OneGet for coreclr
 > .\build.ps1 netstandard2.0
-> .\build.ps1 netcoreapp2.1
 ```
 
 If successfully built above, you should be able to see a folder:

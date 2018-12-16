@@ -7,16 +7,8 @@ Microsoft.PowerShell.Utility\Import-LocalizedData  LocalizedData -filename Packa
 # Summary: PackageManagement is supported on Windows PowerShell 3.0 or later, Nano Server and PowerShellCore
 $isCore = ($PSVersionTable.Keys -contains "PSEdition") -and ($PSVersionTable.PSEdition -ne 'Desktop')
 $binarySubPath = ''
-if ($isCore)
-{
-    # Using the Assembly.LoadFrom API to determine if this is netcoreapp2.1 or if it's older
-    $loadFromMethod = [System.Reflection.Assembly].GetMethods() | Where-Object { $_.Name -eq 'LoadFrom' }
-    if ($loadFromMethod)
-    {
-        $binarySubPath = Join-Path -Path 'coreclr' -ChildPath 'netcoreapp2.1'
-    } else {
-        $binarySubPath = Join-Path -Path 'coreclr' -ChildPath 'netstandard2.0'
-    }
+if ($isCore) {
+    $binarySubPath = Join-Path -Path 'coreclr' -ChildPath 'netstandard2.0'
 } else {
     $binarySubPath = 'fullclr'
 }

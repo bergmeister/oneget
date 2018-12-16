@@ -58,7 +58,7 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0')">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Compile Remove="Providers\Inbox\Common\*;Resources\Messages.Designer.cs" />
     <EmbeddedResource Remove="Resources\Messages.resx" />
   </ItemGroup>
@@ -68,7 +68,7 @@
     <EmbeddedResource Remove="Resources\Messages.resx" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0')">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.ComponentModel.EventBasedAsync" Version="4.3.0" />

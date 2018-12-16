@@ -52,7 +52,6 @@ namespace Microsoft.PowerShell.PackageManagement.Cmdlets {
         private readonly Hashtable _dynamicOptions = new Hashtable();
         private string _bootstrapNuGet = "false";
         private static bool telemetryAPIInitialized = false;
-        private static Type TelemetryAPIType = null;
 
         [Parameter]
         public SwitchParameter Force;
@@ -477,25 +476,45 @@ namespace Microsoft.PowerShell.PackageManagement.Cmdlets {
             return true;
         }
 
-        private void TraceMessageHelper(string message, SoftwareIdentity swidObject)
+#if !CORECLR
+        private class TelemetryDto
         {
-            #if !CORECLR
-            Microsoft.PowerShell.Telemetry.Internal.TelemetryAPI.TraceMessage(message, new
-            {
-                PackageName = swidObject.Name,
-                PackageVersion = swidObject.Version,
-                PackageProviderName = swidObject.ProviderName,
-                Repository = swidObject.Source,
-                ExecutionStatus = swidObject.Status,
-                ExecutionTime = DateTime.Today
-            });
-            #endif
+            public string PackageName;
+            public string PackageVersion;
+            public string PackageProviderName;
+            public string Repository;
+            public string ExecutionStatus;
+            public DateTime ExecutionTime;
         }
 
-        #region Event and telemetry stuff
-        //Calling PowerShell Telemetry APIs
-        protected void TraceMessage(string message, SoftwareIdentity swidObject) {
+        private void TraceMessageHelper(string message, SoftwareIdentity swidObject)
+        {
+            // Call Windows PowerShell internal telemetry API via reflection
+            // since it is not exposed in the reference assemblies.
+            Assembly sma = typeof(Cmdlet).GetTypeInfo().Assembly;
+            var TelemetryAPIType = sma.GetType("Microsoft.PowerShell.Telemetry.Internal.TelemetryAPI");
+            if (TelemetryAPIType != null)
+            {
+                var traceMessageMethod = TelemetryAPIType.GetMethod("TraceMessage");
+                var genericTraceMessageMethod = traceMessageMethod.MakeGenericMethod(typeof(TelemetryDto));
+                genericTraceMessageMethod.Invoke(null, new object[] {message, new TelemetryDto()
+                {
+                    PackageName = swidObject.Name,
+                    PackageVersion = swidObject.Version,
+                    PackageProviderName = swidObject.ProviderName,
+                    Repository = swidObject.Source,
+                    ExecutionStatus = swidObject.Status,
+                    ExecutionTime = DateTime.Today,
+                }});
+            }
+        }
+#endif
 
+        #region Event and telemetry stuff
+        // Calling PowerShell Telemetry API on Windows PowerShell
+        protected void TraceMessage(string message, SoftwareIdentity swidObject)
+        {
+            #if !CORECLR
             try
             {
                 if (!OSInformation.IsWindowsPowerShell) {
@@ -505,18 +524,6 @@ namespace Microsoft.PowerShell.PackageManagement.Cmdlets {
                 if (!telemetryAPIInitialized)
                 {
                     telemetryAPIInitialized = true;
-
-                    // try to load telemetry api from sma
-                    // we have to check for telemetry type instead of just running try catch because if telemetryapi cannot be loaded, the error
-                    // will not be caught in this try catch
-                    Assembly sma = typeof(Cmdlet).GetTypeInfo().Assembly;
-
-                    TelemetryAPIType = sma.GetType("Microsoft.PowerShell.Telemetry.Internal.TelemetryAPI");
-                }
-
-                if (TelemetryAPIType != null)
-                {
-                    // if the type exists
                     TraceMessageHelper(message, swidObject);
                 }
             }
@@ -524,6 +531,7 @@ namespace Microsoft.PowerShell.PackageManagement.Cmdlets {
             {
                 Verbose(ex.Message);
             }
+            #endif
         }
 
         protected enum EventTask {

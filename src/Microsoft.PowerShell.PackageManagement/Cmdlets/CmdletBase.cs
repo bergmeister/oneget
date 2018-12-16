@@ -51,7 +51,9 @@ namespace Microsoft.PowerShell.PackageManagement.Cmdlets {
         private readonly int _callCount;
         private readonly Hashtable _dynamicOptions = new Hashtable();
         private string _bootstrapNuGet = "false";
+#if !CORECLR
         private static bool telemetryAPIInitialized = false;
+#endif
 
         [Parameter]
         public SwitchParameter Force;
@@ -514,7 +516,7 @@ namespace Microsoft.PowerShell.PackageManagement.Cmdlets {
         // Calling PowerShell Telemetry API on Windows PowerShell
         protected void TraceMessage(string message, SoftwareIdentity swidObject)
         {
-            #if !CORECLR
+#if !CORECLR
             try
             {
                 if (!OSInformation.IsWindowsPowerShell) {
@@ -531,7 +533,7 @@ namespace Microsoft.PowerShell.PackageManagement.Cmdlets {
             {
                 Verbose(ex.Message);
             }
-            #endif
+#endif
         }
 
         protected enum EventTask {

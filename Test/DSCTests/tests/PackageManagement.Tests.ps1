@@ -28,9 +28,9 @@ Describe "PackageManagement Acceptance Test" -Tags "Feature" {
        
         $gpp = Get-PackageProvider
         
-        $gpp | ?{ $_.name -eq "NuGet" } | should not BeNullOrEmpty
+        $gpp | ?{ $_.name -eq "NuGet" } | Should -Not -BeNullOrEmpty
    
-        $gpp | ?{ $_.name -eq "PowerShellGet" } | should not BeNullOrEmpty   
+        $gpp | ?{ $_.name -eq "PowerShellGet" } | Should -Not -BeNullOrEmpty   
     }
 
     It "find-packageprovider PowerShellGet" {

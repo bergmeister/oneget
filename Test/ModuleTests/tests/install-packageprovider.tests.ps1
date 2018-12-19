@@ -78,7 +78,7 @@ Describe "install-packageprovider" -Tags "Feature" {
 
     It "install-packageprovider, Expect succeed" {
         $a = (install-PackageProvider -name gistprovider -force -source $InternalSource).name 
-        $a -contains "gistprovider" | should -Be $true "gistprovider"
+        $a | Should -Contain "gistprovider"
 
         # check for swidtag field
         $gist = (Get-PackageProvider gist -ListAvailable | Select -First 1)

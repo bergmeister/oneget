@@ -64,8 +64,8 @@ Describe -Name  "PackageManagementSource Get.Set.Test-TargetResource Basic Test"
             $getResult.Ensure | should be "Absent"
             $getResult.Name | should be "MyNuget"
             $getResult.Providername | should be "Nuget" 
-            $getResult.SourceLocation | should BeNullOrEmpty
-            $getResult.InstallationPolicy | should BeNullOrEmpty 
+            $getResult.SourceLocation | should -BeNullOrEmpty
+            $getResult.InstallationPolicy | should -BeNullOrEmpty 
         }
 
      

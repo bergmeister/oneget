@@ -299,7 +299,7 @@ Describe "Find-Package" -Tags @('Feature','SLOW'){
     it "EXPECTED: Find a package with a location created via new-psdrive" -Skip:($IsCoreCLR) {
         $Error.Clear()
         New-PSDrive -Name xx -PSProvider FileSystem -Root $TestDrive -warningaction:silentlycontinue -ea silentlycontinue > $null; find-package -name "fooobarrr" -provider nuget -source xx:\  -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should  Not -Be "SourceNotFound,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackage"
+        $ERROR[0].FullyQualifiedErrorId | should -Not -Be "SourceNotFound,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackage"
         $ERROR[0].FullyQualifiedErrorId | should -Be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackage"
     }
 
@@ -334,14 +334,14 @@ Describe "Find-Package" -Tags @('Feature','SLOW'){
     It "EXPECTED: Finds 100 packages should throw error" {
         $packages = Get-Content "$PSScriptRoot\..\..\Packages_100.txt"
 
-        { Find-Package -ProviderName $nuget -Source $source -Name $packages -ErrorAction Stop } | should throw
+        { Find-Package -ProviderName $nuget -Source $source -Name $packages -ErrorAction Stop } | Should -Throw
     }
 
 
     It "EXPECTED: Finds 128 packages should throw error" {
         $packages = Get-Content "$PSScriptRoot\..\..\Packages_128.txt"
 
-        {Find-Package -ProviderName $nuget -Source $source -Name $packages -ErrorAction Stop} | should throw
+        {Find-Package -ProviderName $nuget -Source $source -Name $packages -ErrorAction Stop} | Should -Throw
     }
 
     It "EXPECTED: Finds 'TestPackage' Package using fwlink" {
@@ -470,31 +470,31 @@ Describe "Find-Package" -Tags @('Feature','SLOW'){
     }
 
     It "EXPECTED: -FAILS- To Find Package Due To Too Long Of Name" {
-        { find-package -name $longName -provider $nuget -source $source -EA Stop } | should throw
+        { find-package -name $longName -provider $nuget -source $source -EA Stop } | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Find Package Due To Invalid Name" {
-        {find-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -source $source -EA stop} | should throw
+        {find-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -source $source -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Find Package Due To Negative Maximum Version Parameter" {
-        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -maximumversion "-1.5" -EA stop} | should throw
+        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -maximumversion "-1.5" -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Find Package Due To Negative Minimum Version Parameter" {
-        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "-1.5" -EA stop} | should throw
+        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "-1.5" -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Find Package Due To Negative Required Version Parameter" {
-        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -requiredversion "-1.5" -EA stop } | should throw
+        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -requiredversion "-1.5" -EA stop } | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Find Package Due To Out Of Bounds Required Version Parameter" {
-        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "1.0" -maximumversion "1.5" -requiredversion "2.0" -EA stop} | should throw
+        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "1.0" -maximumversion "1.5" -requiredversion "2.0" -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Find Package Due To Minimum Version Parameter Greater Than Maximum Version Parameter" {
-        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "1.5" -maximumversion "1.0" -EA stop} | should throw
+        {find-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "1.5" -maximumversion "1.0" -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- Find-Package with wrong source should not error out about dynamic parameter" {
@@ -737,39 +737,39 @@ Describe "Save-Package" -Tags "Feature" {
     }
 
     It "EXPECTED: -FAILS- To Save Package Due To Too Long Of Name" {
-        {save-package -name $longName -provider $nuget -source $source -Path $destination -EA stop} | should throw
+        {save-package -name $longName -provider $nuget -source $source -Path $destination -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Save Package Due To Invalid Name" {
-        {save-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -source $source -Path $destination -EA stop} | should throw
+        {save-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -source $source -Path $destination -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Save Package without folder pre-created" {
-        {save-package -name Jquery -provider $nuget -source $source -Path "$destination\SavePackageTest\FolderDoesNotExist" -EA stop} | should throw
+        {save-package -name Jquery -provider $nuget -source $source -Path "$destination\SavePackageTest\FolderDoesNotExist" -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Save Package -LiteralPath without folder pre-created" {
-        {save-package -name Jquery -provider $nuget -source $source -LiteralPath "$destination\SavePackageTest\FolderDoesNotExist" -EA stop} | should throw
+        {save-package -name Jquery -provider $nuget -source $source -LiteralPath "$destination\SavePackageTest\FolderDoesNotExist" -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Save Package Due To Negative Maximum Version Parameter" {
-        {save-package -name "zlib" -provider $nuget -source $source -maximumversion "-1.5" -Path $destination -EA stop} | should throw
+        {save-package -name "zlib" -provider $nuget -source $source -maximumversion "-1.5" -Path $destination -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Save Package Due To Negative Minimum Version Parameter" {
-        {save-package -name "zlib" -provider $nuget -source $source -minimumversion "-1.5" -Path $destination -EA stop} | should throw
+        {save-package -name "zlib" -provider $nuget -source $source -minimumversion "-1.5" -Path $destination -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Save Package Due To Negative Required Version Parameter" {
-        {save-package -name "zlib" -provider $nuget -source $source -requiredversion "-1.5" -Path $destination -EA stop} | should throw
+        {save-package -name "zlib" -provider $nuget -source $source -requiredversion "-1.5" -Path $destination -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Save Package Due To Out Of Bounds Required Version Parameter" {
-        {save-package -name "zlib" -provider $nuget -source $source -minimumversion "1.0" -maximumversion "1.5" -requiredversion "2.0" -Path $destination -EA stop} | should throw
+        {save-package -name "zlib" -provider $nuget -source $source -minimumversion "1.0" -maximumversion "1.5" -requiredversion "2.0" -Path $destination -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Save Package Due To Minimum Version Parameter Greater Than Maximum Version Parameter" {
-        {save-package -name "zlib" -provider $nuget -source $source -minimumversion "1.5" -maximumversion "1.0" -Path $destination -EA stop} | should throw
+        {save-package -name "zlib" -provider $nuget -source $source -minimumversion "1.5" -maximumversion "1.0" -Path $destination -EA stop} | Should -Throw
     }
 }
 
@@ -815,7 +815,7 @@ Describe "save-package with Whatif" -Tags "Feature" {
 
      It "install-package -name nuget with whatif where package has a dependencies, Expect succeed" {
         {Save-Package -name zlib -source $source `
-            -ProviderName NuGet -Path $tempDir -whatif -ErrorAction SilentlyContinue} | Should -not throw
+            -ProviderName NuGet -Path $tempDir -whatif -ErrorAction SilentlyContinue} | Should -not -Throw
     }
 }
 
@@ -862,7 +862,7 @@ Describe "install-package with Whatif" -Tags "Feature" {
 
      It "install-package -name nuget with whatif where package has a dependencies, Expect succeed" {
         {install-Package -name grpc.dependencies.zlib -source $source `
-            -ProviderName NuGet -destination $installationPath -whatif} | Should -not throw
+            -ProviderName NuGet -destination $installationPath -whatif} | Should -not -Throw
     }
 }
 
@@ -1230,31 +1230,31 @@ Describe Install-Package -Tags "Feature" {
         }
 
     It "EXPECTED: -FAILS- To Install Package Due To Too Long Of Name" {
-        {install-package -name $longName -provider $nuget -source $source -destination $destination -force -EA stop} | should throw
+        {install-package -name $longName -provider $nuget -source $source -destination $destination -force -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Install  Package Due To Invalid Name" {
-        {install-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -source $source -destination $destination -force -EA stop} | should throw
+        {install-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -source $source -destination $destination -force -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Install Package Due To Negative Maximum Version Parameter" {
-        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -maximumversion "-1.5" -destination $destination -force -EA stop} | should throw
+        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -maximumversion "-1.5" -destination $destination -force -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Install Package Due To Negative Maximum Version Parameter" {
-        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "-1.5" -destination $destination -force -EA stop} | should throw
+        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "-1.5" -destination $destination -force -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Install Package Due To Negative Maximum Version Parameter" {
-        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -requiredversion "-1.5" -destination $destination -force -EA stop} | should throw
+        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -requiredversion "-1.5" -destination $destination -force -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Install Package Due To Out Of Bounds Required Version Parameter" {
-        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "1.0" -maximumversion "1.5" -requiredversion "2.0" -destination $destination -force -EA stop} | should throw
+        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "1.0" -maximumversion "1.5" -requiredversion "2.0" -destination $destination -force -EA stop} | Should -Throw
     }
 
     It "EXPECTED: -FAILS- To Install Package Due To Minimum Version Parameter Greater Than Maximum Version Parameter" {
-        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "1.5" -maximumversion "1.0" -destination $destination -force -EA stop} | should throw
+        {install-package -name "grpc.dependencies.zlib" -provider $nuget -source $source -minimumversion "1.5" -maximumversion "1.0" -destination $destination -force -EA stop} | Should -Throw
     }
 }
 
@@ -1279,7 +1279,7 @@ Describe Get-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Get Package Due To Too Long Of Name" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {get-package -name $longName -provider $nuget -destination $destination -EA stop} | should throw
+        {get-package -name $longName -provider $nuget -destination $destination -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1287,7 +1287,7 @@ Describe Get-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Get Package Due To Invalid Name" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {get-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -destination $destination -EA stop} | should throw
+        {get-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -destination $destination -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1295,7 +1295,7 @@ Describe Get-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Get Package Due To Out Of Bounds Required Version Parameter" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {get-package -name "adept.nugetrunner" -provider $nuget -maximumversion "4.0" -minimumversion "1.0" -requiredversion "5.0" -destination $destination -EA stop} | should throw
+        {get-package -name "adept.nugetrunner" -provider $nuget -maximumversion "4.0" -minimumversion "1.0" -requiredversion "5.0" -destination $destination -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1303,7 +1303,7 @@ Describe Get-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Get Package Due To Minimum Version Parameter Greater Than Maximum Version Parameter" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {get-package -name "adept.nugetrunner" -provider $nuget -maximumversion "3.0" -minimumversion "4.0" -destination $destination -EA stop} | should throw
+        {get-package -name "adept.nugetrunner" -provider $nuget -maximumversion "3.0" -minimumversion "4.0" -destination $destination -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1334,7 +1334,7 @@ Describe Uninstall-Package -Tags "Feature" {
         uninstall-package -name "Jquery" -provider $nuget -destination $destination -RequiredVersion 2.1.3
 
         #the old version should be gone but the later should exist
-        {Get-Package -ProviderName nuget -RequiredVersion 2.1.3 -Name jquery -Destination $destination -EA stop} | should throw
+        {Get-Package -ProviderName nuget -RequiredVersion 2.1.3 -Name jquery -Destination $destination -EA stop} | Should -Throw
         (Get-Package -ProviderName nuget -RequiredVersion 2.1.4 -Name jquery -Destination $destination).Version | should -Be "2.1.4"
 
     }
@@ -1353,7 +1353,7 @@ Describe Uninstall-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Uninstall Package Due To Too Long Of Name" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {uninstall-package -name $longName -provider $nuget -destination $destination -force -EA stop} | should throw
+        {uninstall-package -name $longName -provider $nuget -destination $destination -force -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1361,7 +1361,7 @@ Describe Uninstall-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Uninstall Package Due To Invalid Name" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {uninstall-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -destination $destination -EA stop} | should throw
+        {uninstall-package -name "1THIS_3SHOULD_5NEVER_7BE_9FOUND_11EVER" -provider $nuget -destination $destination -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1369,7 +1369,7 @@ Describe Uninstall-Package -Tags "Feature" {
 
 	It "EXPECTED: -FAILS- To Uninstall Package Due To Out Of Bounds Required Version Parameter" {
 		(install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-		{uninstall-package -name "adept.nugetrunner" -provider $nuget -maximumversion "4.0" -minimumversion "1.0" -requiredversion "5.0" -destination $destination -EA stop} | should throw
+		{uninstall-package -name "adept.nugetrunner" -provider $nuget -maximumversion "4.0" -minimumversion "1.0" -requiredversion "5.0" -destination $destination -EA stop} | Should -Throw
 		if (Test-Path -Path $destination\adept.nugetrunner*) {
 			(Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
 		}
@@ -1377,7 +1377,7 @@ Describe Uninstall-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Uninstall Package Due To Minimum Version Parameter Greater Than Maximum Version Parameter" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {uninstall-package -name "adept.nugetrunner" -provider $nuget -maximumversion "3.0" -minimumversion "4.0" -destination $destination -EA stop} | should throw
+        {uninstall-package -name "adept.nugetrunner" -provider $nuget -maximumversion "3.0" -minimumversion "4.0" -destination $destination -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1385,7 +1385,7 @@ Describe Uninstall-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Uninstall Package Due To Negative Maximum Version Parameter" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {uninstall-package -name "grpc.dependencies.zlib" -provider $nuget -maximumversion "-1.5" -destination $destination -force -EA stop} | should throw
+        {uninstall-package -name "grpc.dependencies.zlib" -provider $nuget -maximumversion "-1.5" -destination $destination -force -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1393,7 +1393,7 @@ Describe Uninstall-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Uninstall Package Due To Negative Minimum Version Parameter" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {uninstall-package -name "grpc.dependencies.zlib" -provider $nuget -minimumversion "-1.5" -destination $destination -force -EA stop} | should throw
+        {uninstall-package -name "grpc.dependencies.zlib" -provider $nuget -minimumversion "-1.5" -destination $destination -force -EA stop} | Should -Throw
         if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }
@@ -1401,7 +1401,7 @@ Describe Uninstall-Package -Tags "Feature" {
 
     It "EXPECTED: -FAILS- To Uninstall Package Due To Negative Required Version Parameter" {
         (install-package -name "adept.nugetrunner" -provider $nuget -source $source -destination $destination -force)
-        {uninstall-package -name "grpc.dependencies.zlib" -provider $nuget -requiredversion "-1.5" -destination $destination -force -EA stop} | should throw
+        {uninstall-package -name "grpc.dependencies.zlib" -provider $nuget -requiredversion "-1.5" -destination $destination -force -EA stop} | Should -Throw
 if (Test-Path -Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
         }

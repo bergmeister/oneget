@@ -87,32 +87,32 @@ Describe "Find, Get, Save, and Install-Package with Culture" -Tags "Feature" {
 
     it "EXPECTED: Find a package should not show Culture" -Skip:($IsCoreCLR -and (-not $IsWindows)) {
         $packages = Find-Package -ProviderName OneGetTest -DisplayCulture
-        $packages.Culture | Should -not -BeNullOrEmpty
-        $packages.Name | Should -not -BeNullOrEmpty
+        $packages.Culture | Should -not --BeNullOrEmpty
+        $packages.Name | Should -not --BeNullOrEmpty
     }
 
     it "EXPECTED: Find a package with a DisplayCulture" -Skip:($IsCoreCLR -and (-not $IsWindows)) {
         $packages = Find-Package -DisplayCulture
-        $packages.Culture | Should -not -BeNullOrEmpty
-        $packages.Name | Should -not -BeNullOrEmpty
+        $packages.Culture | Should -not --BeNullOrEmpty
+        $packages.Name | Should -not --BeNullOrEmpty
     }
 
     it "EXPECTED: Get a package should not show Culture" -Skip:($IsCoreCLR -and (-not $IsWindows)) {
         $packages = Get-Package -DisplayCulture -ProviderName OneGetTest -WarningAction SilentlyContinue
-        $packages.Culture | Should -not -BeNullOrEmpty
-        $packages.Name | Should -not -BeNullOrEmpty
+        $packages.Culture | Should -not --BeNullOrEmpty
+        $packages.Name | Should -not --BeNullOrEmpty
     }
 
     it "EXPECTED: Install a package with a DisplayCulture" -Skip:($IsCoreCLR -and (-not $IsWindows)) {
         $packages = install-Package -ProviderName OneGetTest -name jquery -force -DisplayCulture -WarningAction SilentlyContinue
-        $packages.Culture | Should -not -BeNullOrEmpty
-        $packages.Name | Should -not -BeNullOrEmpty
+        $packages.Culture | Should -not --BeNullOrEmpty
+        $packages.Name | Should -not --BeNullOrEmpty
     }
 
     it "EXPECTED: Save a package with a DisplayCulture" -Skip {
         $packages = save-Package -ProviderName OneGetTest -name jquery -DisplayCulture -path $destination
-        $packages.Culture | Should -not -BeNullOrEmpty
-        $packages.Name | Should -not -BeNullOrEmpty
+        $packages.Culture | Should -not --BeNullOrEmpty
+        $packages.Name | Should -not --BeNullOrEmpty
     }
 }
 
@@ -157,7 +157,7 @@ Describe "Event Test" -Tags "Feature" {
         else
         {
             # this will fail the test
-            $events | Should -not -BeNullOrEmpty
+            $events | Should -not --BeNullOrEmpty
         }
     }
 
@@ -202,7 +202,7 @@ Describe "Event Test" -Tags "Feature" {
         else 
         {
             # this will fail the test
-            $events | Should -not -BeNullOrEmpty
+            $events | Should -not --BeNullOrEmpty
         }
     }
 
@@ -246,7 +246,7 @@ Describe "Event Test" -Tags "Feature" {
         else
         {
             # this will fail the test
-            $events | Should -not -BeNullOrEmpty
+            $events | Should -not --BeNullOrEmpty
         }
     }
 
@@ -290,7 +290,7 @@ Describe "Event Test" -Tags "Feature" {
         else
         {
             # this will fail the test
-            $events | Should -not -BeNullOrEmpty
+            $events | Should -not --BeNullOrEmpty
         }
     }
 }
@@ -815,7 +815,7 @@ Describe "save-package with Whatif" -Tags "Feature" {
 
      It "install-package -name nuget with whatif where package has a dependencies, Expect succeed" {
         {Save-Package -name zlib -source $source `
-            -ProviderName NuGet -Path $tempDir -whatif -ErrorAction SilentlyContinue} | should not throw
+            -ProviderName NuGet -Path $tempDir -whatif -ErrorAction SilentlyContinue} | Should -not throw
     }
 }
 
@@ -862,7 +862,7 @@ Describe "install-package with Whatif" -Tags "Feature" {
 
      It "install-package -name nuget with whatif where package has a dependencies, Expect succeed" {
         {install-Package -name grpc.dependencies.zlib -source $source `
-            -ProviderName NuGet -destination $installationPath -whatif} | should not throw
+            -ProviderName NuGet -destination $installationPath -whatif} | Should -not throw
     }
 }
 
@@ -950,7 +950,7 @@ Describe "install-package with Scope" -tags "Feature" {
         $package.Name | Should -Match "GistProvider"
 
         $packages = Get-package -ProviderName nuget 
-        $packages | ?{ $_.Name -eq "GistProvider" } | should -not -BeNullOrEmpty
+        $packages | ?{ $_.Name -eq "GistProvider" } | should -not --BeNullOrEmpty
 
         (Test-Path "$UserInstalledLocation\GistProvider*" -Verbose) | should -Be $true
     }
@@ -975,7 +975,7 @@ Describe "install-package with Scope" -tags "Feature" {
         $package.Name | Should -Match "GistProvider"
 
         $packages = Get-package -ProviderName nuget 
-        $packages | ?{ $_.Name -eq "GistProvider" } | should -not -BeNullOrEmpty
+        $packages | ?{ $_.Name -eq "GistProvider" } | should -not --BeNullOrEmpty
 
         (Test-Path "$UserInstalledLocation\GistProvider*") | should -Be $true
     }
@@ -1000,7 +1000,7 @@ Describe "install-package with Scope" -tags "Feature" {
         $package.Name | Should -Match "GistProvider"
 
         $packages = Get-package -ProviderName nuget 
-        $packages | ?{ $_.Name -eq "GistProvider" } | should -not -BeNullOrEmpty
+        $packages | ?{ $_.Name -eq "GistProvider" } | should -not --BeNullOrEmpty
 
         (Test-Path "$UserInstalledLocation\GistProvider*") | should -Be $true
     }
@@ -1076,7 +1076,7 @@ Describe Install-Package -Tags "Feature" {
             Install-Package -Name TestModuleWithDependencyA -Provider $Nuget -source $poshtestgallery -Destination $destination -Force -RequiredVersion 1.0
             (Test-Path $destination\TestModuleWithDependencyA.1.0) | should -Be $true
             (Test-Path $destination\TestModuleWithDependencyB.1.0) | should -Be $true
-            # should not install B
+            # Should -not install B
             (Test-Path $destination\TestModuleWithDependencyB.2.0) | should -Be $false
             (Test-Path $destination\TestModuleWithDependencyC.1.0) | should -Be $true
             (Test-Path $destination\TestModuleWithDependencyD.1.0) | should -Be $true
@@ -1098,9 +1098,9 @@ Describe Install-Package -Tags "Feature" {
             (Test-Path $destination\TestModuleWithDependencyE.1.0) | should -Be $true
             (Test-Path $destination\TestModuleWithDependencyC.1.0) | should -Be $true
             (Test-Path $destination\TestModuleWithDependencyD.1.0) | should -Be $true
-            # should not install f
+            # Should -not install f
             (Test-Path $destination\TestModuleWithDependencyF.1.0) | should -Be $false
-            # should not install version 3.0 of c
+            # Should -not install version 3.0 of c
             (Test-Path $destination\TestModuleWithDependencyF.3.0) | should -Be $false
         }
         finally {
@@ -1311,13 +1311,13 @@ Describe Get-Package -Tags "Feature" {
 
     It "Get-Package -RequiredVersion with prerelease version, Expect error" {
         $package =  Get-Package -Name FooPackage -RequiredVersion '3.0.0-rc-3' -ErrorVariable ev -ErrorAction SilentlyContinue
-        $package | Should -BeNullOrEmpty
+        $package | Should --BeNullOrEmpty
         $ev.FullyQualifiedErrorId | should -Be 'NoMatchFound,Microsoft.PowerShell.PackageManagement.Cmdlets.GetPackage'
     }
 
     It "Get-Package with prerelease version in -MinimumVersion and -MaximumVersion, Expect error" {
         $package =  Get-Package -Name FooPackage -MinimumVersion '3.0.0-rc-3' -MaximumVersion '3.0.0-rc-3' -ErrorVariable ev -ErrorAction SilentlyContinue
-        $package | Should -BeNullOrEmpty
+        $package | Should --BeNullOrEmpty
         $ev.FullyQualifiedErrorId | should -Be 'NoMatchFound,Microsoft.PowerShell.PackageManagement.Cmdlets.GetPackage'
     }
 }
@@ -1443,13 +1443,13 @@ if (Test-Path -Path $destination\adept.nugetrunner*) {
 
     It "Uninstall-Package -RequiredVersion with prerelease version, Expect error" {
         $package =  Uninstall-Package -Name FooPackage -RequiredVersion '3.0.0-rc-3' -ErrorVariable ev -ErrorAction SilentlyContinue
-        $package | Should -BeNullOrEmpty
+        $package | Should --BeNullOrEmpty
         $ev.FullyQualifiedErrorId | should -Be 'NoMatchFound,Microsoft.PowerShell.PackageManagement.Cmdlets.UninstallPackage'
     }
 
     It "Uninstall-Package with prerelease version in -MinimumVersion and -MaximumVersion, Expect error" {
         $package =  Uninstall-Package -Name FooPackage -MinimumVersion '3.0.0-rc-3' -MaximumVersion '3.0.0-rc-3' -ErrorVariable ev -ErrorAction SilentlyContinue
-        $package | Should -BeNullOrEmpty
+        $package | Should --BeNullOrEmpty
         $ev.FullyQualifiedErrorId | should -Be 'NoMatchFound,Microsoft.PowerShell.PackageManagement.Cmdlets.UninstallPackage'
     }
 }
@@ -1644,21 +1644,21 @@ Describe Unregister-PackageSource -Tags "Feature" {
 
     it "EXPECTED: Unregisters The 'NugetTest.org' Package Source" {
         (register-packagesource -name "nugettest.org" -provider $nuget -location $source)
-        (Find-Package -name jquery -Source "nugettest.org").Name | should -not -BeNullOrEmpty
-        (unregister-packagesource -name "nugettest.org" -provider $nuget).name | should -BeNullOrEmpty
-        (Find-Package -name jquery -Source "nugettest.org" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue).Name | should -BeNullOrEmpty
+        (Find-Package -name jquery -Source "nugettest.org").Name | should -not --BeNullOrEmpty
+        (unregister-packagesource -name "nugettest.org" -provider $nuget).name | should --BeNullOrEmpty
+        (Find-Package -name jquery -Source "nugettest.org" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue).Name | should --BeNullOrEmpty
     }
 
     it "EXPECTED: Unregisters Multiple Package Sources" {
         foreach ($x in $pkgSources) {
             (register-packagesource -name $x -provider $nuget -location $source)
-            (unregister-packagesource -name $x -provider $nuget).name | should -BeNullOrEmpty
+            (unregister-packagesource -name $x -provider $nuget).name | should --BeNullOrEmpty
         }
     }
 
     it "EXPECTED: Unregisters A 'NugetTest' Package Source After Having The Provider Piped" {
         (get-packageprovider -name $nuget | register-packagesource -name "nugettest" -location $source)
-        (unregister-packagesource -name "nugettest" -provider $nuget).name | should -BeNullOrEmpty
+        (unregister-packagesource -name "nugettest" -provider $nuget).name | should --BeNullOrEmpty
     }
 }
 

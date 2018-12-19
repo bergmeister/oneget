@@ -44,7 +44,7 @@ Describe "PSGet Message Resolver" -Tags @('BVT', 'DRT')  {
             
             $msg = powershell 'find-module -repository asdasdasd -ea silentlycontinue ; $ERROR[0].Exception.Message'
             $msg | Should -Match 'PSRepository' 
-            $msg | Should not match 'package' 
+            $msg | Should -not match 'package' 
         }
     }
 }

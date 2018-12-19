@@ -64,7 +64,7 @@ Describe "VSTS Nuget Package Feed" {
         $package.Source | Should -Be $VSTSsource
 
         $packagePath = Join-Path -path $tempPath -ChildPath $packageName
-        (Get-ChildItem -Path "$packagePath*") | Should Not -Be $null
+        (Get-ChildItem -Path "$packagePath*") | Should -not -Be $null
 
         # Clean-up - delete saved papackage in temp path
         Remove-Item "$packagePath*"

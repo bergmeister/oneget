@@ -173,9 +173,9 @@ Describe "import-packageprovider" -Tags "Feature" {
         #check all version of OneGetTest is listed
         $x = get-packageprovider "OneGetTest" -ListAvailable
 
-        $x | ?{ $_.Version.ToString() -eq "9.9.0.0" } | should -not -BeNullOrEmpty
-        $x | ?{ $_.Version.ToString() -eq "3.5.0.0" } | should -not -BeNullOrEmpty
-        $x | ?{ $_.Version.ToString() -eq "1.1.0.0" } | should -not -BeNullOrEmpty
+        $x | ?{ $_.Version.ToString() -eq "9.9.0.0" } | should -not --BeNullOrEmpty
+        $x | ?{ $_.Version.ToString() -eq "3.5.0.0" } | should -not --BeNullOrEmpty
+        $x | ?{ $_.Version.ToString() -eq "1.1.0.0" } | should -not --BeNullOrEmpty
 
         #latest one is imported
         $y = powershell '(import-packageprovider -name "OneGetTest").Version.Tostring()'

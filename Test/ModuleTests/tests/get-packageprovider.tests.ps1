@@ -115,14 +115,14 @@ Describe "Get-PackageProvider with list" -Tags @('BVT', 'DRT'){
         (get-packageprovider -name "PowerShellGet" -ListAvailable).name | Should -Match "PowerShellGet"
 
         $providers = get-packageprovider -Name OneGetTest, PowerShellGet -ListAvailable
-        $providers | ?{ $_.name -eq "OneGetTest" } | should -not --BeNullOrEmpty
-        $providers | ?{ $_.name -eq "PowerShellGet" } | should -not --BeNullOrEmpty
+        $providers | ?{ $_.name -eq "OneGetTest" } | should -not -BeNullOrEmpty
+        $providers | ?{ $_.name -eq "PowerShellGet" } | should -not -BeNullOrEmpty
     }
 
     It "List two providers with wildcard chars" -Skip:($IsCoreCLR){
         $providers = get-packageprovider -Name OneGetTest* -ListAvailable
 
-        $providers | ?{ $_.name -eq "OneGetTest" } | should -not --BeNullOrEmpty
+        $providers | ?{ $_.name -eq "OneGetTest" } | should -not -BeNullOrEmpty
         #all versions of the OneGetTest provider should -Be displayed
         $providers.Count -ge 3 | should -Be $true
     }

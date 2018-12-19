@@ -136,7 +136,7 @@ Describe "find-packageprovider" -Tags "Feature" {
 
     It "find-install-packageprovider with PowerShell provider, Expect succeed" {
         $provider= find-packageprovider -name TSDProvider -MinimumVersion 0.1 -MaximumVersion 0.2  -Source $InternalGallery 
-        $provider | ?{ $_.Version -eq "0.2" } | should -not --BeNullOrEmpty
+        $provider | ?{ $_.Version -eq "0.2" } | should -not -BeNullOrEmpty
 
         $a=install-packageprovider -name TSDProvider -MinimumVersion 0.1 -MaximumVersion 0.2 -Force -Source $InternalGallery -WarningAction SilentlyContinue
         $a.Name | Should -Match "TSDProvider"
@@ -146,7 +146,7 @@ Describe "find-packageprovider" -Tags "Feature" {
    It "find-install-packageprovider nuget, Expect succeed" -Skip {
         $provider= find-packageprovider -name nuget -MinimumVersion 2.8.5.1 -MaximumVersion 2.8.5.123
 
-        $provider | ?{ $_.Version -eq "2.8.5.122" } | should -not --BeNullOrEmpty
+        $provider | ?{ $_.Version -eq "2.8.5.122" } | should -not -BeNullOrEmpty
         $provider.Count -eq 1 | should -Be $true
 
         $a=install-packageprovider -name nuget -MinimumVersion 2.8.5.1 -MaximumVersion 2.8.5.123 -Force
@@ -154,7 +154,7 @@ Describe "find-packageprovider" -Tags "Feature" {
         $a.Version | Should -Match "2.8.5.122"
 
         $b= Get-PackageProvider -ListAvailable
-        $b | ?{ $_.Version -eq "2.8.5.122" } | should -not --BeNullOrEmpty
+        $b | ?{ $_.Version -eq "2.8.5.122" } | should -not -BeNullOrEmpty
     }
  }
 

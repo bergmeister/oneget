@@ -50,7 +50,7 @@ Describe "Get-package with version parameter  - valid scenarios" -Tags "Feature"
     It "Get-package supports -AllVersions parameter" -Skip:($IsCoreCLR){
         $outputWithAllVersions = (Get-Package -providername Programs,Msi -AllVersions)
         $outputWithoutAllVersions = (Get-Package -providername Programs,Msi)
-        $outputWithAllVersions.count -ge $outputWithoutAllVersions.count | should be $true
+        $outputWithAllVersions.count -ge $outputWithoutAllVersions.count | should -Be $true
     }
 
     It "E2E: Get-package supports -AllVersions parameter for a specific package - with multiple versions from Nuget" {
@@ -62,19 +62,19 @@ Describe "Get-package with version parameter  - valid scenarios" -Tags "Feature"
         }
 
         $installedPackages = (Get-Package -Name "adept.nugetrunner" -Provider $nuget -Destination $destination -AllVersions)
-        $installedPackages.Name[0] | should be "adept.nugetrunner"
-        $installedPackages.Count -eq $foundPackages.Count | should be $true
+        $installedPackages.Name[0] | should -Be "adept.nugetrunner"
+        $installedPackages.Count -eq $foundPackages.Count | should -Be $true
 
         # check that getting attributes from meta is not case sensitive
         $packageToInspect = $installedPackages[0]
 
         $firstDescr = $packageToInspect.Meta.Attributes["Description"]
-        # the description should not be null
-        [string]::IsNullOrWhiteSpace($firstDescr) | should be $false
+        # the description should -not -Be null
+        [string]::IsNullOrWhiteSpace($firstDescr) | should -Be $false
         $secondDescr = $packageToInspect.Meta.Attributes["dEsCriPtIoN"]
 
-        # the 2 descriptions should be the same
-        $firstDescr -eq $secondDescr | should be $true
+        # the 2 descriptions should -Be the same
+        $firstDescr -eq $secondDescr | should -Be $true
 
         if (Test-Path $destination\adept.nugetrunner*) {
             (Remove-Item -Recurse -Force -Path $destination\adept.nugetrunner*)
@@ -87,12 +87,12 @@ Describe "Get-package with version parameter - Error scenarios" -Tags "Feature" 
     It "Get-package -AllVersions -- Cannot be used with other version parameters" {
         $Error.Clear()
         Get-Package -AllVersions -RequiredVersion 1.0 -MinimumVersion 2.0  -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "AllVersionsCannotBeUsedWithOtherVersionParameters,Microsoft.PowerShell.PackageManagement.Cmdlets.GetPackage"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "AllVersionsCannotBeUsedWithOtherVersionParameters,Microsoft.PowerShell.PackageManagement.Cmdlets.GetPackage"
     }
 
     It "Get-package -RequiredVersion -- Cannot be used with Min/Max version parameters" {
         $Error.Clear()
         Get-Package -RequiredVersion 1.0 -MinimumVersion 2.0 -MaximumVersion 3.0 -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "VersionRangeAndRequiredVersionCannotBeSpecifiedTogether,Microsoft.PowerShell.PackageManagement.Cmdlets.GetPackage"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "VersionRangeAndRequiredVersionCannotBeSpecifiedTogether,Microsoft.PowerShell.PackageManagement.Cmdlets.GetPackage"
     }
 }

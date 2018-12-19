@@ -66,95 +66,95 @@ Describe "find-packageprovider" -Tags "Feature" {
 
     It "find-packageprovider without any parameters, Expect succeed" {
         $a = (Find-PackageProvider -force).name
-        $a -contains "TSDProvider" | should be $true
+        $a -contains "TSDProvider" | should -Be $true
     }
 
     It "find-packageprovider -name, Expect succeed" -Skip:(-not $WindowsPowerShell){
         $a = (Find-PackageProvider -name nuget -Force).name
-        $a -contains "GistProvider" | should be $false
+        $a -contains "GistProvider" | should -Be $false
     }
 
     It "find-packageprovider -name with wildcards, Expect succeed" {
         $a = (Find-PackageProvider -name gist*).name
-        $a -contains "GistProvider" | should be $true
+        $a -contains "GistProvider" | should -Be $true
     }
 
     It "find-packageprovider -name with wildcards, Expect succeed" {
         $a = (Find-PackageProvider -name nu*).name
-        $a -contains "GistProvider" | should be $false
+        $a -contains "GistProvider" | should -Be $false
     }
 
     It "find-packageprovider -name array, Expect succeed" {
         $names=@("gistprovider", "TSD*")
 
         $a = (Find-PackageProvider -name $names).name
-        $a -contains "GistProvider" | should be $true
-        $a -contains "TSDProvider" | should be $true
+        $a -contains "GistProvider" | should -Be $true
+        $a -contains "TSDProvider" | should -Be $true
     }
 
-    <# Temporarily skip this test because it times out 
+    <# Temporarily skip this test -Because it times out 
     It "find-packageprovider -allversions, Expect succeed" {
         $a = (Find-PackageProvider -allversions)
 
-        $a.Name -contains "TSDProvider" | should be $true
-        $a.Count -ge 1 | should be $true
+        $a.Name -contains "TSDProvider" | should -Be $true
+        $a.Count -ge 1 | should -Be $true
     }
     #>
 
     It "find-packageprovider -name -allversions, Expect succeed" {
         $a = (Find-PackageProvider -name TSDProvider -AllVersions).name
-        $a -contains "TSDProvider" | should be $true
+        $a -contains "TSDProvider" | should -Be $true
 
         $b = (Find-PackageProvider -name TSDP* -AllVersions -WarningAction SilentlyContinue).name
-        $b.Count -ge $a.Count | should be $false
+        $b.Count -ge $a.Count | should -Be $false
     }
 
     It "EXPECTED: success 'find-packageprovider nuget -allVersions'" -Skip:($IsCoreCLR){
         $a = find-packageprovider -name nuget -allVersions
-        $a.Count -ge 4| should be $true
+        $a.Count -ge 4| should -Be $true
 
         $b = find-packageprovider -allVersions
-        $b.Count -gt $a.Count| should be $true
+        $b.Count -gt $a.Count| should -Be $true
     }
 
     It "find-packageprovider -Source, Expect succeed" {
         $a = (Find-PackageProvider -source $InternalGallery).name
-        $a -contains "TSDProvider" | should be $true
+        $a -contains "TSDProvider" | should -Be $true
     }
 
     It "find-packageprovider -Source -Name, Expect succeed" {
         $a = (Find-PackageProvider -name gistprovider -source $InternalGallery).name
-        $a -contains "gistprovider" | should be $true
+        $a -contains "gistprovider" | should -Be $true
     }
 
     It "find-packageprovider -Name with dependencies, Expect succeed" {
         # gistprovider 1.5 depends on tsdprovider 0.2
         $a = (Find-PackageProvider -name gistprovider -RequiredVersion 1.5 -source $InternalGallery -IncludeDependencies)
-        $a.Name -contains "gistprovider" | should be $true
-        $a.Name -contains "tsdprovider" | should be $true
+        $a.Name -contains "gistprovider" | should -Be $true
+        $a.Name -contains "tsdprovider" | should -Be $true
     }
 
     It "find-install-packageprovider with PowerShell provider, Expect succeed" {
         $provider= find-packageprovider -name TSDProvider -MinimumVersion 0.1 -MaximumVersion 0.2  -Source $InternalGallery 
-        $provider | ?{ $_.Version -eq "0.2" } | should not BeNullOrEmpty
+        $provider | ?{ $_.Version -eq "0.2" } | should -not -BeNullOrEmpty
 
         $a=install-packageprovider -name TSDProvider -MinimumVersion 0.1 -MaximumVersion 0.2 -Force -Source $InternalGallery -WarningAction SilentlyContinue
-        $a.Name | should match "TSDProvider"
-        $a.Version | should match "0.2"
+        $a.Name | Should -Match "TSDProvider"
+        $a.Version | Should -Match "0.2"
     }
 
    It "find-install-packageprovider nuget, Expect succeed" -Skip {
         $provider= find-packageprovider -name nuget -MinimumVersion 2.8.5.1 -MaximumVersion 2.8.5.123
 
-        $provider | ?{ $_.Version -eq "2.8.5.122" } | should not BeNullOrEmpty
-        $provider.Count -eq 1 | should be $true
+        $provider | ?{ $_.Version -eq "2.8.5.122" } | should -not -BeNullOrEmpty
+        $provider.Count -eq 1 | should -Be $true
 
         $a=install-packageprovider -name nuget -MinimumVersion 2.8.5.1 -MaximumVersion 2.8.5.123 -Force
-        $a.Name | should match "nuget"
-        $a.Version | should match "2.8.5.122"
+        $a.Name | Should -Match "nuget"
+        $a.Version | Should -Match "2.8.5.122"
 
         $b= Get-PackageProvider -ListAvailable
-        $b | ?{ $_.Version -eq "2.8.5.122" } | should not BeNullOrEmpty
+        $b | ?{ $_.Version -eq "2.8.5.122" } | should -not -BeNullOrEmpty
     }
  }
 
@@ -162,24 +162,24 @@ Describe "Find-Package With FilterOnTag" -Tags "Feature" {
 
     it "EXPECTED: Find a package with FilterOnTag" {
         $a=find-package -ProviderName nuget -source $InternalGallery -Name gistprovider -FilterOnTag Provider
-        $a.name | should match "GistProvider"
+        $a.name | Should -Match "GistProvider"
 	}
 
     it "EXPECTED: Find a package with array of FilterOnTags" {
         $a=find-package -ProviderName nuget -source $InternalGallery -Name gistprovider -FilterOnTag @('Provider','PackageManagement')
-        $a.name | should match "GistProvider"
+        $a.name | Should -Match "GistProvider"
     }
 
     it "EXPECTED: Find a package with a bad tag" {
         $Error.Clear()
         find-package -ProviderName nuget -source $InternalGallery -Name gistprovider -FilterOnTag Pro -ErrorAction SilentlyContinue -ErrorVariable ev
-        $ev.FullyQualifiedErrorId | should be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackage"
+        $ev.FullyQualifiedErrorId | should -Be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackage"
 	}
 
     it "EXPECTED: Find a package with a bad tag" {
         $Error.Clear()
         find-package -ProviderName nuget -source $InternalGallery -Name gistprovider -FilterOnTag Providerrrrrr -ErrorAction SilentlyContinue -ErrorVariable ev
-        $ev.FullyQualifiedErrorId | should be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackage"
+        $ev.FullyQualifiedErrorId | should -Be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackage"
 	}
 }
 
@@ -192,15 +192,15 @@ Describe "Find-PackageProvider with Versions" -Tags "Feature" {
     2.8.5.24#>
 
     It "EXPECTED: success 'Find a provider  -requiredVersion 3.5'" -Skip:($IsCoreCLR){
-        (find-packageprovider -name Nuget -RequiredVersion 2.8.5.122).Version.ToString() | should match "2.8.5.122"
+        (find-packageprovider -name Nuget -RequiredVersion 2.8.5.122).Version.ToString() | Should -Match "2.8.5.122"
     }
 
     It "EXPECTED: success 'find a provider with MinimumVersion and MaximumVersion'" -Skip:($IsCoreCLR){
-        (find-packageprovider -name nuget -MinimumVersion 2.8.5.105 -MaximumVersion 2.8.5.123).Version.ToString() | should match "2.8.5.122"
+        (find-packageprovider -name nuget -MinimumVersion 2.8.5.105 -MaximumVersion 2.8.5.123).Version.ToString() | Should -Match "2.8.5.122"
     }
 
     It "EXPECTED: success 'find a provider with MaximumVersion'" -Skip:($IsCoreCLR){
-        (find-packageprovider -name nuget -MaximumVersion 2.8.5.122).Version -contains "2.8.5.122" | should be $true
+        (find-packageprovider -name nuget -MaximumVersion 2.8.5.122).Version -contains "2.8.5.122" | should -Be $true
     }
 }
 
@@ -219,55 +219,55 @@ Describe "find-packageprovider Error Cases" -Tags "Feature" {
     It "EXPECTED:  returns an error when inputing a bad version format" {
         $Error.Clear()
         find-packageprovider -name Gistprovider -RequiredVersion BOGUSVERSION  -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "InvalidVersion,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "InvalidVersion,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
     }
 
    It "EXPECTED:  returns an error when asking for a provider that does not exist" {
         $Error.Clear()
         find-packageprovider -name NOT_EXISTS  -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
     }
 
    It "EXPECTED:  returns an error when asking for a provider with RequiredVersoin and MinimumVersion" {
         $Error.Clear()
         find-packageprovider -name NOT_EXISTS -RequiredVersion 1.0 -MinimumVersion 2.0  -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "VersionRangeAndRequiredVersionCannotBeSpecifiedTogether,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "VersionRangeAndRequiredVersionCannotBeSpecifiedTogether,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
     }
 
    It "EXPECTED:  returns an error when asking for a provider with RequiredVersoin and MaximumVersion" {
         $Error.Clear()
         find-packageprovider -name NOT_EXISTS -RequiredVersion 1.0 -MaximumVersion 2.0  -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "VersionRangeAndRequiredVersionCannotBeSpecifiedTogether,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "VersionRangeAndRequiredVersionCannotBeSpecifiedTogether,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
     }
 
    It "EXPECTED:  returns an error when asking for a provider with a MinimumVersion greater than MaximumVersion" {
         $Error.Clear()
         find-packageprovider -name nuget -MaximumVersion 1.0 -MinimumVersion 2.0 -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
     }
 
    It "EXPECTED:  returns an error when asking for a provider with MinimumVersion that does not exist" {
         $Error.Clear()
         find-packageprovider -name gistprovider -MinimumVersion 20.2 -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
     }
 
    It "EXPECTED:  returns an error when asking for a provider with MaximumVersion that does not exist" {
         $Error.Clear()
         find-packageprovider -name gistprovider -MaximumVersion 0.1 -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "NoMatchFoundForCriteria,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
     }
 
    It "EXPECTED:  returns an error when asking for a provider that has name with wildcard and version" {
         $Error.Clear()
         find-packageprovider -name "AnyName*" -RequiredVersion 4.5 -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "MultipleNamesWithVersionNotAllowed,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "MultipleNamesWithVersionNotAllowed,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
     }  
 
    It "EXPECTED:  returns an error when asking for a provider that has name with wildcard and version" {
         $Error.Clear()
         find-packageprovider -name "AnyName" -RequiredVersion 4.5 -allVersions -warningaction:silentlycontinue -ea silentlycontinue
-        $ERROR[0].FullyQualifiedErrorId | should be "AllVersionsCannotBeUsedWithOtherVersionParameters,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
+        $ERROR[0].FullyQualifiedErrorId | should -Be "AllVersionsCannotBeUsedWithOtherVersionParameters,Microsoft.PowerShell.PackageManagement.Cmdlets.FindPackageProvider"
    }
 }
 

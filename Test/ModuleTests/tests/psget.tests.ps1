@@ -43,7 +43,7 @@ Describe "PSGet Message Resolver" -Tags @('BVT', 'DRT')  {
             get-packageprovider nuget -force
             
             $msg = powershell 'find-module -repository asdasdasd -ea silentlycontinue ; $ERROR[0].Exception.Message'
-            $msg | Should match 'PSRepository' 
+            $msg | Should -Match 'PSRepository' 
             $msg | Should not match 'package' 
         }
     }
@@ -65,10 +65,10 @@ Describe "Set-PackageSource" -Tags @('BVT', 'DRT'){
 
             Register-PackageSource -Name internal -Location https://mytestgallery.cloudapp.net/api/v2/ -ProviderName PSModule
             $msg = powershell 'set-packagesource -name internal -newname internal2 -ea silentlycontinue ; $Error[0].FullyQualifiedErrorId'
-            $msg | should match "RepositoryAlreadyRegistered,Add-PackageSource,Microsoft.PowerShell.PackageManagement.Cmdlets.SetPackageSource"
+            $msg | Should -Match "RepositoryAlreadyRegistered,Add-PackageSource,Microsoft.PowerShell.PackageManagement.Cmdlets.SetPackageSource"
             $package = Get-PackageSource -Name internal
-            $package.Name | should match 'internal'
-            $package.ProviderName | should match 'PowerShellGet'
+            $package.Name | Should -Match 'internal'
+            $package.ProviderName | Should -Match 'PowerShellGet'
         }
         finally {
             Unregister-PackageSource -Name internal
@@ -76,10 +76,10 @@ Describe "Set-PackageSource" -Tags @('BVT', 'DRT'){
     }
 
     It "EXPECTED: -FAILS- when Set-PackageSource raises an error but does not remove the old source" -Skip {
-        (Get-PackageSource -Name PSGallery).Count | should be 1
+        (Get-PackageSource -Name PSGallery).Count | should -Be 1
         $msg = powershell 'Set-PackageSource -Name PSGallery -ProviderName PowerShellGet -PackageManagementProvider PowerShellGet -ErrorAction SilentlyContinue; $Error[0].FullyQualifiedErrorId'
-        $msg | should match "InvalidPackageManagementProviderValue,Add-PackageSource,Microsoft.PowerShell.PackageManagement.Cmdlets.SetPackageSource"
-        (Get-PackageSource -Name PSGallery).Count | should be 1
+        $msg | Should -Match "InvalidPackageManagementProviderValue,Add-PackageSource,Microsoft.PowerShell.PackageManagement.Cmdlets.SetPackageSource"
+        (Get-PackageSource -Name PSGallery).Count | should -Be 1
     }
 }
 
@@ -123,7 +123,7 @@ Describe Uninstall-Package -Tags @('BVT', 'DRT'){
         
         # Get-Package must not return any packages - since we just uninstalled allversions of the package
         $msg = powershell 'Get-Package -Name ContosoServer -Provider PowerShellGet -AllVersions -warningaction:silentlycontinue -ea silentlycontinue; $ERROR[0].FullyQualifiedErrorId'
-        $msg | should be "NoMatchFound,Microsoft.PowerShell.PackageManagement.Cmdlets.GetPackage" 
+        $msg | should -Be "NoMatchFound,Microsoft.PowerShell.PackageManagement.Cmdlets.GetPackage" 
         
         # Clean-up - Unregister the Package source
         $packageSource = Get-PackageSource -Name $packageSourceName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue

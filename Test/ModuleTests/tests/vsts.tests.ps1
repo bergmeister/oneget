@@ -38,15 +38,15 @@ Describe "VSTS Nuget Package Feed" {
     it "EXPECTED: Find a package from VSTS feed source" {
 
         $package = (find-package -name $packageName -source $VSTSsource -credential $credential) | Select-Object -First 1
-        $package.Name | Should Be $packageName
-        $package.Source | Should Be $VSTSsource
+        $package.Name | Should -Be $packageName
+        $package.Source | Should -Be $VSTSsource
     }
 
     it "EXPECTED: Install a package from VSTS feed source" {
 
         $package = install-package -name $packageName -source $VSTSsource -credential $credential 
-        $package.Name | Should Be $packageName
-        $package.Source | Should Be $VSTSsource
+        $package.Name | Should -Be $packageName
+        $package.Source | Should -Be $VSTSsource
 
         # Clean-up - uninstall the package 
         $package = Get-Package -Name $packageName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
@@ -60,11 +60,11 @@ Describe "VSTS Nuget Package Feed" {
 
         $tempPath = [System.IO.Path]::GetFullPath($env:tmp)
         $package = save-package -name $packageName -source $VSTSsource -credential $credential -path $tempPath
-        $package.Name | Should Be $packageName
-        $package.Source | Should Be $VSTSsource
+        $package.Name | Should -Be $packageName
+        $package.Source | Should -Be $VSTSsource
 
         $packagePath = Join-Path -path $tempPath -ChildPath $packageName
-        (Get-ChildItem -Path "$packagePath*") | Should Not Be $null
+        (Get-ChildItem -Path "$packagePath*") | Should Not -Be $null
 
         # Clean-up - delete saved papackage in temp path
         Remove-Item "$packagePath*"
@@ -72,17 +72,17 @@ Describe "VSTS Nuget Package Feed" {
 
     it "EXPECTED: Register a VSTS feed as a package source" {
         $pkgSource = Register-PackageSource -name $pkgSourceName -location $VSTSsource -providerName $providerName -Credential $credential
-        $pkgSource.Name | Should Be $pkgSourceName
-        $pkgSource.ProviderName | Should Be $providerName
-        $pkgSource.Location | Should Be $VSTSsource
+        $pkgSource.Name | Should -Be $pkgSourceName
+        $pkgSource.ProviderName | Should -Be $providerName
+        $pkgSource.Location | Should -Be $VSTSsource
 
         # Clean-up - unregister the package source
         $packageSource = Get-PackageSource -Name $pkgSourceName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
         if ($packageSource)
         {
-            $packageSource.Name | Should Be $pkgSourceName
-            $packageSource.ProviderName | Should Be $providerName
-            $packageSource.Location | Should Be $VSTSsource
+            $packageSource.Name | Should -Be $pkgSourceName
+            $packageSource.ProviderName | Should -Be $providerName
+            $packageSource.Location | Should -Be $VSTSsource
             Unregister-PackageSource -Name $pkgSourceName
         }
 	}

@@ -1,6 +1,6 @@
 {
 	"PowerShell": {
-		"displayName": "PowerShell_6.2.0-preview3",
+		"displayName": "PowerShell_6.2.0-preview.3",
 		"source": "https://github.com/PowerShell/PowerShell/releases/download/v6.2.0-preview.3/PowerShell-6.2.0-preview.3-win-x64.msi",			   
 		"hash": {
 			"algorithm": "sha512",
@@ -8,6 +8,6 @@
 		},
 		"summary": "Powershell",
 		"type": "msi",
-		"version": "6.2.0"
+		"version": "6.2.0-preview.3"
 	}
 }

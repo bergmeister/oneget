@@ -160,6 +160,10 @@ function SetupPackageManagementTest
         while (($latestPsVersion.Length -gt 1) -and (-not (Test-Path $moduleBaseCandidate)))
         {
             $latestPsVersion = $latestPsVersion.Substring(0, $latestPsVersion.Length-1)
+            if ($PSVersionTable.GitCommitId.Contains('preview'))
+            {
+                $latestPsVersion = '6-preview'
+            }
             $moduleBaseCandidate = "$Env:ProgramFiles\PowerShell\$latestPsVersion\modules"
         }
         if (-not (Test-Path $moduleBaseCandidate))

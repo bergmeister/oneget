@@ -250,7 +250,7 @@ case "$OSTYPE" in
             exit "$success"
         fi
 
-        pwsh -noprofile -c '"Congratulations! PowerShell DSC for Linux is installed!"'
+        pwsh-preview -noprofile -c '"Congratulations! PowerShell DSC for Linux is installed!"'
         ;;
     darwin*)
         # TODO: Need to do anything here?

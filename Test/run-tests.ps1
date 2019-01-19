@@ -247,9 +247,9 @@ if ($testframework -eq "coreclr")
         $powershellVersion = $powershellCore.Version
         $powershellFolder = "$Env:ProgramFiles\PowerShell\6"
         if ((-not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath 'powershell.exe'))) -and
-                -not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath 'pwsh.exe')) -and 
+                -not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath 'pwsh-preview.exe')) -and 
                 (-not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath 'powershell'))) -and
-                -not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath 'pwsh'))) {
+                -not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath 'pwsh-preview'))) {
             # Everything after "PowerShell-"
             $powershellVersion = $powershellCore.Name.Substring(11)
             $powershellFolder = "$Env:ProgramFiles\PowerShell\$powershellVersion"
@@ -273,7 +273,7 @@ if ($testframework -eq "coreclr")
         }
     }
     
-    & pwsh -command 'Install-Module Pester -Scope CurrentUser -Force'
+    & pwsh-preview -command 'Install-Module Pester -Scope CurrentUser -Force'
 
     # Delete installed PackageManagement  
     $packagemanagementfolder = "$powershellFolder\Modules\PackageManagement\"

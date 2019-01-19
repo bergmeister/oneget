@@ -262,14 +262,21 @@ if ($testframework -eq "coreclr")
 
     if ((-not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath "$powershellCoreFilePath.exe"))) -and
          -not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath $powershellCoreFilePath))) {
-        $powershellCoreFilePath = "pwsh-preview"
+        $powershellCoreFilePath = "pwsh"
         if ((-not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath "$powershellCoreFilePath.exe"))) -and
              -not (Test-Path -Path (Join-Path -Path $powershellFolder -ChildPath $powershellCoreFilePath))) {
             throw "Couldn't find PowerShell Core exe path in folder: $powershellFolder"
         }
     }
     
-    & pwsh-preview -command 'Install-Module Pester -Scope CurrentUser -Force'
+    if ($IsWindows)
+    {
+        & (Join-Path $powershellFolder 'pwsh.exe') -command 'Install-Module Pester -Scope CurrentUser -Force'
+    }
+    else
+    {
+        & (Join-Path $powershellFolder 'pwsh-preview') -command 'Install-Module Pester -Scope CurrentUser -Force'
+    }
 
     # Delete installed PackageManagement  
     $packagemanagementfolder = "$powershellFolder\Modules\PackageManagement\"

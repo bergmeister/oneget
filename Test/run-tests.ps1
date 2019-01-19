@@ -269,7 +269,12 @@ if ($testframework -eq "coreclr")
         }
     }
     
-    & (Join-Path $powershellFolder 'pwsh-preview') -command 'Install-Module Pester -Scope CurrentUser -Force'
+    if ($IsWindows) {
+        & (Join-Path $powershellFolder 'pwsh.exe') -command 'Install-Module Pester -Scope CurrentUser -Force'
+    }
+    else {
+        & (Join-Path $powershellFolder 'pwsh-preview') -command 'Install-Module Pester -Scope CurrentUser -Force'
+    }
 
     # Delete installed PackageManagement  
     $packagemanagementfolder = "$powershellFolder\Modules\PackageManagement\"

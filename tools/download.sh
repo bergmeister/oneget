@@ -120,7 +120,7 @@ case "$OSTYPE" in
         ;;
 esac
 
-pwsh -noprofile -c '"Congratulations! PowerShell is installed at $PSHOME"'
+pwsh-preview -noprofile -c '"Congratulations! PowerShell is installed at $PSHOME"'
 success=$?
 
 if [[ "$success" != 0 ]]; then

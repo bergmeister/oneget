@@ -692,10 +692,11 @@ Describe "install-packageprovider Error Cases" -Tags "Feature" {
         Register-PackageSource -Name $InternalSource2 -Location $InternalGallery2 -ProviderName 'PowerShellGet' -ErrorAction SilentlyContinue
    }
 
-    It "install-packageprovider -name with wildcards, Expect error" {
+    It "Install-Packageprovider -name with wildcards, Expect error" {
         $Error.Clear()
-        install-PackageProvider -name gist* -force -source $InternalGallery -warningaction:silentlycontinue -ErrorVariable wildcardError -ErrorAction SilentlyContinue        
-        $wildcardError.FullyQualifiedErrorId| should be "WildCardCharsAreNotSupported,Microsoft.PowerShell.PackageManagement.Cmdlets.InstallPackageProvider"
+        Install-PackageProvider -name gist* -force -source $InternalGallery -warningaction:silentlycontinue -ErrorVariable wildcardError -ErrorAction SilentlyContinue
+        Write-Verbose "wildcardError: $wildcardError`n$($wildcardError | Select-Object *)"
+        $wildcardError.FullyQualifiedErrorId | should be 'WildCardCharsAreNotSupported,Microsoft.PowerShell.PackageManagement.Cmdlets.InstallPackageProvider'
     }
 
     It "install-packageprovider - EXPECTED:  returns an error when multiples sources contain the same package provider" {

@@ -33,13 +33,12 @@ case "$OSTYPE" in
                 fi
 
                 case "$VERSION_ID" in
-                    14.04)
-                    https://github.com/PowerShell/PowerShell/releases/download/v6.2.3/powershell_6.2.3-1.ubuntu.16.04_amd64.deb
-                        package=powershell_6.2.0-1.ubuntu.14.04_amd64.deb
-                        ;;
                     16.04)
+                    https://github.com/PowerShell/PowerShell/releases/download/v6.2.3/powershell_6.2.3-1.ubuntu.16.04_amd64.deb
                         package=powershell_6.2.3-1.ubuntu.16.04_amd64.deb
-
+                        ;;
+                    18.04)
+                        package=powershell_6.2.3-1.ubuntu.18.04_amd64.deb
                         ;;
                     *)
                         echo "Ubuntu $VERSION_ID is not supported!" >&2

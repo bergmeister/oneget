@@ -695,7 +695,7 @@ Describe "install-packageprovider Error Cases" -Tags "Feature" {
     It "Install-Packageprovider -name with wildcards, Expect error" {
         $Error.Clear()
         Install-PackageProvider -name gist* -force -source $InternalGallery -warningaction:silentlycontinue -ErrorVariable wildcardError -ErrorAction SilentlyContinue
-        Write-Verbose "wildcardError: $wildcardError`n$($wildcardError | Select-Object *)"
+        Write-Verbose "wildcardError: $wildcardError`n$($wildcardError | Select-Object *)" -Verbose
         $wildcardError.FullyQualifiedErrorId | should be 'WildCardCharsAreNotSupported,Microsoft.PowerShell.PackageManagement.Cmdlets.InstallPackageProvider'
     }
 
